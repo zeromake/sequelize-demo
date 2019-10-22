@@ -9,14 +9,11 @@ describe('include', function() {
                 {
                     model: Tag,
                     required: true,
-                    where: {
-                        id: 1,
-                    }
                 }
             ],
-            limit: 1,
         });
         expect(books).toHaveLength(1);
+        expect(books[0].get('Tags')).toHaveLength(2);
     });
 
     it('include not subQuery', async() => {
@@ -26,14 +23,11 @@ describe('include', function() {
                 {
                     model: Tag,
                     required: true,
-                    where: {
-                        id: 1,
-                    }
                 }
             ],
-            limit: 1,
         });
         expect(books).toHaveLength(1);
+        expect(books[0].get('Tags')).toHaveLength(2);
     });
 
     it('include offset', async() => {
@@ -71,10 +65,12 @@ describe('include', function() {
         }
         let books = await query();
         expect(books).toHaveLength(1);
+        expect(books[0].get('Tags')).toHaveLength(1);
         const id = books[0].get('id');
         books = await query(1);
         expect(books).toHaveLength(1);
         expect(books[0].get('id')).toEqual(id);
+        expect(books[0].get('Tags')).toHaveLength(1);
     });
 
     it('include offset group', async() => {
@@ -95,11 +91,6 @@ describe('include', function() {
                     {
                         model: Tag,
                         required: true,
-                        where: {
-                            id: {
-                                [Op.in]: tags.map(i => i.get('id'))
-                            },
-                        }
                     }
                 ],
                 offset,
@@ -113,6 +104,7 @@ describe('include', function() {
         }
         let books = await query();
         expect(books).toHaveLength(1);
+        expect(books[0].get('Tags')).toHaveLength(1);
         books = await query(1);
         expect(books).toHaveLength(0);
     });
