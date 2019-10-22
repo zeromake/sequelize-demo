@@ -84,7 +84,6 @@ describe('include', function() {
                 }
             ]
         });
-        const tags = book.get('Tags');
         function query(offset = 0) {
             return Book.findAll({
                 include: [
