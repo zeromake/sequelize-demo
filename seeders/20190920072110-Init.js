@@ -34,20 +34,7 @@ module.exports = {
         updatedAt: now,
         createdAt: now,
       }
-    ])
-    await queryInterface.bulkInsert('DesignTasks', [
-      {
-        "level": 0,
-        "name": "需求1",
-        "creator_id": 58308528,
-        "tpl_total": 1,
-        "designer_total": 1,
-        "scenario": 32,
-        "task_type": "82",
-        "type_name": "任务类型test"
-      }
     ]);
-    
   },
 
   /**
