@@ -7,13 +7,10 @@ module.exports = {
    * @param {import('sequelize')} Sequelize 
    */
   async up(queryInterface, Sequelize) {
-    const now = new Date();
-    await queryInterface.bulkInsert('Books', [{
+    await queryInterface.bulkInsert('books', [{
       name: 'Test',
-      updatedAt: now,
-      createdAt: now,
     }], {});
-    const [book] = await queryInterface.select(null, 'Books', {
+    const [book] = await queryInterface.select(null, 'books', {
       attributes: ['id'],
       limit: 1,
       order: [
@@ -21,18 +18,14 @@ module.exports = {
       ]
     });
     const id = book.id;
-    await queryInterface.bulkInsert('Tags', [
+    await queryInterface.bulkInsert('tags', [
       {
         name: 'test',
-        bookId: id,
-        updatedAt: now,
-        createdAt: now,
+        book_id: id,
       },
       {
         name: 'tag',
-        bookId: id,
-        updatedAt: now,
-        createdAt: now,
+        book_id: id,
       }
     ]);
   },
@@ -43,7 +36,7 @@ module.exports = {
    * @param {import('sequelize')} Sequelize 
    */
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Tags', null, {});
-    await queryInterface.bulkDelete('Books', null, {});
+    await queryInterface.bulkDelete('tags', null, {});
+    await queryInterface.bulkDelete('books', null, {});
   }
 };

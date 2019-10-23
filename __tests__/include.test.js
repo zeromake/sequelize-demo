@@ -1,6 +1,8 @@
 const db = require('../models');
 const { Book, Tag } = db;
 const Op = db.Sequelize.Op;
+const fn = db.Sequelize.fn;
+
 
 describe('include', function() {
     it('include subQuery', async() => {
@@ -13,7 +15,7 @@ describe('include', function() {
             ],
         });
         expect(books).toHaveLength(1);
-        expect(books[0].get('Tags')).toHaveLength(2);
+        expect(books[0].get('tags')).toHaveLength(2);
     });
 
     it('include not subQuery', async() => {
@@ -27,7 +29,7 @@ describe('include', function() {
             ],
         });
         expect(books).toHaveLength(1);
-        expect(books[0].get('Tags')).toHaveLength(2);
+        expect(books[0].get('tags')).toHaveLength(2);
     });
 
     it('include offset', async() => {
@@ -41,7 +43,7 @@ describe('include', function() {
                 }
             ]
         });
-        const tags = book.get('Tags');
+        const tags = book.get('tags');
         function query(offset = 0) {
             return Book.findAll({
                 include: [
@@ -65,29 +67,21 @@ describe('include', function() {
         }
         let books = await query();
         expect(books).toHaveLength(1);
-        expect(books[0].get('Tags')).toHaveLength(1);
+        expect(books[0].get('tags')).toHaveLength(1);
         const id = books[0].get('id');
         books = await query(1);
         expect(books).toHaveLength(1);
         expect(books[0].get('id')).toEqual(id);
-        expect(books[0].get('Tags')).toHaveLength(1);
+        expect(books[0].get('tags')).toHaveLength(1);
     });
 
     it('include offset group', async() => {
-        const book = await Book.findOne({
-            order: [
-                ['id', 'DESC'],
-            ],
-            include: [
-                {
-                    model: Tag
-                }
-            ]
-        });
         function query(offset = 0) {
             return Book.findAll({
+                attributes: ['id'],
                 include: [
                     {
+                        attributes: [],
                         model: Tag,
                         required: true,
                     }
@@ -95,15 +89,14 @@ describe('include', function() {
                 offset,
                 limit: 1,
                 subQuery: false,
-                order: [
-                    [Tag, 'id', 'DESC']
-                ],
-                group: 'Book.id',
+                // order: [
+                //     [Tag, 'id', 'DESC']
+                // ],
+                group: `${Book.name}.id`,
             });
         }
         let books = await query();
         expect(books).toHaveLength(1);
-        expect(books[0].get('Tags')).toHaveLength(1);
         books = await query(1);
         expect(books).toHaveLength(0);
     });

@@ -6,7 +6,7 @@ module.exports = {
    * @param {import('sequelize')} Sequelize 
    */
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Books', {
+    await queryInterface.createTable('books', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -15,18 +15,10 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       }
     });
   },
   down(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Books');
+    return queryInterface.dropTable('books');
   }
 };

@@ -1,9 +1,9 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Tag = sequelize.define('Tag', {
+  const Tag = sequelize.define('tag', {
     name: DataTypes.STRING,
-    bookId: DataTypes.INTEGER
-  }, {});
+    book_id: DataTypes.INTEGER
+  });
   Tag.associate = function(models) {
     // const { Book, Tag } = models;
     // Tag.belongsTo(Book);

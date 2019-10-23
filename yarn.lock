@@ -356,6 +356,11 @@
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.11.5.tgz?cache=0&sync_timestamp=1571778309592&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.11.5.tgz#6c3c8dc84988aff11fd2a63d7b5fbf39eaaab7b1"
   integrity sha1-bDyNyEmIr/Ef0qY9e1+/Oeqqt7E=
 
+"@types/node@^12.11.5":
+  version "12.11.5"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.11.5.tgz#6c3c8dc84988aff11fd2a63d7b5fbf39eaaab7b1"
+  integrity sha1-bDyNyEmIr/Ef0qY9e1+/Oeqqt7E=
+
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/@types/stack-utils/download/@types/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
