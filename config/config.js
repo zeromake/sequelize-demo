@@ -15,7 +15,7 @@ const config = {
   define: {
       timestamps: false,
       underscored: true,
-      // freezeTableName: true,
+      freezeTableName: true,
   },
   timezone: '+08:00',
   operatorsAliases: false,
@@ -28,7 +28,7 @@ const defaultConfig = !isMysql ? {
   define: {
     timestamps: false,
     underscored: true,
-    // freezeTableName: true,
+    freezeTableName: true,
   }
 } : config;
 

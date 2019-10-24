@@ -1,67 +1,152 @@
 const db = require('../models');
-const { Book, Tag } = db;
+const { Books, Tags } = db;
 const Op = db.Sequelize.Op;
 const fn = db.Sequelize.fn;
 
 
 describe('include', function() {
     it('include subQuery', async() => {
-        const books = await Book.findAll({
+        console.log('-------------subQuery-----------------')
+        const books = await Books.findAll({
             include: [
                 {
-                    model: Tag,
+                    model: Tags,
                     required: true,
                 }
             ],
+            limit: 20
         });
         expect(books).toHaveLength(1);
         expect(books[0].get('tags')).toHaveLength(2);
     });
 
     it('include not subQuery', async() => {
-        const books = await Book.findAll({
+        console.log('-------------close subQuery-----------------')
+        const books = await Books.findAll({
             subQuery: false,
             include: [
                 {
-                    model: Tag,
+                    model: Tags,
                     required: true,
                 }
             ],
+            limit: 20
         });
         expect(books).toHaveLength(1);
         expect(books[0].get('tags')).toHaveLength(2);
     });
 
-    it('include offset', async() => {
-        const book = await Book.findOne({
-            order: [
-                ['id', 'DESC'],
-            ],
+    it('include subQuery count', async() => {
+        console.log('-------------subQuery count-----------------')
+        const rawCount = await Books.count();
+        const count = await Books.count({
             include: [
                 {
-                    model: Tag
+                    model: Tags,
+                    required: true,
+                }
+            ],
+        });
+        expect(rawCount).not.toEqual(count);
+    });
+
+    it('include not subQuery count', async() => {
+        console.log('-------------close subQuery count-----------------')
+        const rawCount = await Books.count();
+        const count = await Books.count({
+            subQuery: false,
+            include: [
+                {
+                    model: Tags,
+                    required: true,
+                }
+            ],
+        });
+        expect(rawCount).not.toEqual(count);
+    });
+
+    it('include subQuery count and distinct', async() => {
+        console.log('-------------subQuery count distinct-----------------')
+        const rawCount = await Books.count();
+        const count = await Books.count({
+            subQuery: false,
+            distinct: true,
+            col: 'id',
+            include: [
+                {
+                    model: Tags,
+                    required: true,
+                }
+            ],
+        });
+        expect(rawCount).toEqual(count);
+    });
+
+
+    it('include findItems', async() => {
+        console.log('--------------findItems-----------------');
+        const rawCount = await Books.count();
+        const [_, count] = await Books.findItems({
+            page_num: 1,
+            page_size: 20
+        }, {
+            subQuery: false,
+            include: [
+                {
+                    model: Tags,
+                    required: true,
+                }
+            ],
+            group: `${Books.name}.id`,
+        });
+        expect(rawCount).toEqual(count);
+    });
+
+    it('include not subQuery tags len', async() => {
+        console.log('-------------close subQuery tags len-----------------')
+        let book = await Books.findOne({
+            include: [
+                {
+                    model: Tags,
+                    required: true,
                 }
             ]
         });
-        const tags = book.get('tags');
+        let tags = book.get('tags');
+        const rawLen = tags.length;
+        // 2
+        expect(rawLen).toEqual(2)
+
+        book = await Books.findOne({
+            subQuery: false,
+            include: [
+                {
+                    model: Tags,
+                    required: true,
+                }
+            ]
+        });
+        tags = book.get('tags');
+        const len = tags.length;
+        // 1
+        expect(len).toEqual(1)
+    })
+
+    it('include offset', async() => {
+        console.log('-------------subQuery offset-----------------')
         function query(offset = 0) {
-            return Book.findAll({
+            return Books.findAll({
                 include: [
                     {
-                        model: Tag,
+                        model: Tags,
                         required: true,
-                        where: {
-                            id: {
-                                [Op.in]: tags.map(i => i.get('id'))
-                            },
-                        }
                     }
                 ],
                 offset,
                 limit: 1,
                 subQuery: false,
                 order: [
-                    [Tag, 'id', 'DESC']
+                    [Tags, 'id', 'DESC']
                 ]
             });
         }
@@ -76,13 +161,14 @@ describe('include', function() {
     });
 
     it('include offset group', async() => {
+        console.log('-------------subQuery offset group-----------------')
         function query(offset = 0) {
-            return Book.findAll({
+            return Books.findAll({
                 attributes: ['id'],
                 include: [
                     {
                         attributes: [],
-                        model: Tag,
+                        model: Tags,
                         required: true,
                     }
                 ],
@@ -92,7 +178,7 @@ describe('include', function() {
                 // order: [
                 //     [Tag, 'id', 'DESC']
                 // ],
-                group: `${Book.name}.id`,
+                group: `${Books.name}.id`,
             });
         }
         let books = await query();
